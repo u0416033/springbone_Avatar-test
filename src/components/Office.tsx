@@ -25,6 +25,10 @@ export function Office() {
   const cubeC = new THREE.Mesh(cgeometry, material);
   const cubeD = new THREE.Mesh(cgeometry, material);
 
+  const cubeE = new THREE.Mesh(cgeometry, material);
+  const cubeF = new THREE.Mesh(cgeometry, material);
+  const cubeG = new THREE.Mesh(cgeometry, material);
+
   const [shouldReset, setShouldReset] = useState(true);
   // spring bones
   const springBoneManager = new VRMSpringBoneManager();
@@ -59,6 +63,14 @@ export function Office() {
     cubeD.name = "cubeD";
     cubeD.position.set(0, -0.4, 0);
     cubeC.add(cubeD);
+
+    cubeE.name = "cubeE";
+    cubeE.position.set(0.2, -0.4, 0);
+    cubeB.add(cubeE);
+
+    cubeF.name = "cubeF";
+    cubeF.position.set(0.2, -0.4, 0);
+    cubeE.add(cubeF);
     // helpers
     const gridHelper = new THREE.GridHelper(10, 10);
     scene.add(gridHelper);
@@ -67,16 +79,25 @@ export function Office() {
     scene.add(axesHelper);
 
     const springBone = new VRMSpringBoneJoint(cubeB, cubeC, { hitRadius: 0.1 });
-    springBoneManager.addSpringBone(springBone);
+    springBoneManager.addJoint(springBone);
     const springBone2 = new VRMSpringBoneJoint(cubeC, cubeD, { hitRadius: 0.1 });
-    springBoneManager.addSpringBone(springBone2);
+    springBoneManager.addJoint(springBone2);
+
+    const springBone3 = new VRMSpringBoneJoint(cubeB, cubeE, { hitRadius: 0.1 });
+    springBoneManager.addJoint(springBone3);
+    const springBone4 = new VRMSpringBoneJoint(cubeE, cubeF, { hitRadius: 0.1 });
+    springBoneManager.addJoint(springBone4);
 
     // helper
     const springBoneHelper = new VRMSpringBoneJointHelper(springBone);
     const springBoneHelper2 = new VRMSpringBoneJointHelper(springBone2);
+    const springBoneHelper3 = new VRMSpringBoneJointHelper(springBone3);
+    const springBoneHelper4 = new VRMSpringBoneJointHelper(springBone4);
 
     scene.add(springBoneHelper);
     scene.add(springBoneHelper2);
+    scene.add(springBoneHelper3);
+    scene.add(springBoneHelper4);
 
     // init spring bones
     springBoneManager.setInitState();
@@ -89,11 +110,19 @@ export function Office() {
 
       cubeB.remove(cubeC);
 
+      cubeA.remove(cubeD);
+      cubeB.remove(cubeE);
+
+      cubeB.remove(cubeF);
+
       scene.remove(gridHelper);
 
       scene.remove(axesHelper);
 
       scene.remove(springBoneHelper);
+      scene.remove(springBoneHelper2);
+      scene.remove(springBoneHelper3);
+      scene.remove(springBoneHelper4);
     };
   }, [shouldReset]);
   useFrame((_, delta) => {
